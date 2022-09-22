@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<textarea placeholder="Введите СМС" style="
+    width: 300px;
+    height: 70px;
+" id="message"></textarea>
+<div></div>
+<button id="sendBtn">Send</button>
+
+<div style="margin: 10px 0"></div>
+<div>
+    <div style="display: table-cell; width: 50vw; border: solid silver 1px; padding: 10px;">
+        <h1>Чат:</h1>
+        <div id="response">Пока данных нет</div>
+    </div>
+    <div style="display: table-cell; width: 50vw; border: solid silver 1px; padding: 10px;">
+        <h1>Лог:</h1>
+        <div id="log"></div>
+    </div>
+</div>
+
+<script>
+
+    let socket = new WebSocket("ws://" + location.host + "/ws");
+    socket.onmessage = function (event) {
+        let resp = document.getElementById('response');
+        resp.innerText = `${new Date().toLocaleTimeString()}: \n\n ${event.data}\n ------------------------------------- \n ${resp.innerText}`;
+    }
+    document.getElementById('sendBtn').onclick = function (e) {
+        let message = document.getElementById('message').value;
+        if (!message) return;
+        socket.send(message);
+        console.log(message);
+    }
+
+</script>
+</body>
+</html>
